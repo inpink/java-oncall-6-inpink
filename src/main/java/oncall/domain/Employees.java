@@ -28,6 +28,10 @@ public class Employees {
         return employees.get(index);
     }
 
+    public int getSize() {
+        return employees.size();
+    }
+
     private void validateSize(List<String> employeesNames) {
         IntegerValidator.validateInRange(
                 employeesNames.size(),
