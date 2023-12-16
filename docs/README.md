@@ -6,7 +6,7 @@
 ## 구현할 "기능 목록"을 정리
 
 [입력 화면]
-- 사용자가 잘못된 값을 입력하면 IllegalArgumentException 발생
+- 사용자가 잘못된 값을 입력하면 IllegalArgumentException 발생 O
 - ☆[ERROR]로 시작하는 에러 메시지를 출력 후 해당 부분부터 다시 입력을 받음 O
 
   
