@@ -49,7 +49,8 @@ public class OncallService {
         return Dates.create(month, days);
     }
 
-    public Oncall generateOncall(StartDate startDate, Dates dates, Employees workdayEmployees, Employees holidayEmployees) {
+    public Oncall generateOncall(StartDate startDate, Dates dates,
+                                 Employees workdayEmployees, Employees holidayEmployees) {
         Month monthNumber = startDate.getMonth();
         Map<Integer, DayOfWeek> days = dates.getDays();
         List<Employee> oncallEmployees = new ArrayList<>();
@@ -59,40 +60,25 @@ public class OncallService {
 
         for (int dayNumber : days.keySet()) {
             DayOfWeek day = days.get(dayNumber);
-            assignWorkdayEmployee(Holidays.isHoliday(monthNumber, dayNumber, day),
-                    oncallEmployees, holidayEmployees, holidayEmployeeIndex);
-            assignHolidayEmployee(workdayEmployees, dayNumber, monthNumber,
-                    day, oncallEmployees, workdayEmployeeIndex);
+            if (Holidays.isHoliday(monthNumber, dayNumber, day)) {
+                assignEmployee(oncallEmployees, holidayEmployees, holidayEmployeeIndex);
+            }
+            else { // 평일
+                assignEmployee(oncallEmployees, workdayEmployees, workdayEmployeeIndex);
+            }
         }
+
         return Oncall.create(oncallEmployees);
     }
 
-    private void assignWorkdayEmployee(boolean monthNumber, List<Employee> oncallEmployees, Employees holidayEmployees,
-                                       int[] holidayEmployeeIndex) {
-        if (monthNumber) {
-            assignEmployee(oncallEmployees, holidayEmployees, holidayEmployeeIndex);
-        }
-    }
-
-    private void assignHolidayEmployee(Employees workdayEmployees, int dayNumber, Month monthNumber, DayOfWeek day,
-                                       List<Employee> oncallEmployees, int[] workdayEmployeeIndex) {
-        assignWorkdayEmployee(!Holidays.isHoliday(monthNumber, dayNumber, day), oncallEmployees, workdayEmployees,
-                workdayEmployeeIndex);
-    }
-
     private void assignEmployee(List<Employee> oncallEmployees, Employees employees, int[] employeeIndex) {
-        Employee candidate = employees.findEmployee(calculateEmployeeIndex(employees, employeeIndex));
+        Employee candidate = employees.findEmployee(employeeIndex[0] % employees.getSize());
         if (isLastOncallEmployee(oncallEmployees, candidate)) {
             candidate = employees.findEmployee(employeeIndex[0]);
             employeeIndex[0]++;
         }
-
         oncallEmployees.add(candidate);
         employeeIndex[0]++;
-    }
-
-    private static int calculateEmployeeIndex(Employees employees, int[] employeeIndex) {
-        return employeeIndex[0] % employees.getSize();
     }
 
 }
