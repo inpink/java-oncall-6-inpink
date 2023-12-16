@@ -3,6 +3,7 @@ package oncall.controller;
 import static oncall.messages.ErrorMessages.INVALID_INPUT;
 
 import oncall.domain.Employees;
+import oncall.domain.date.Dates;
 import oncall.domain.date.StartDate;
 import oncall.service.OncallService;
 import oncall.util.InputUtil;
@@ -25,6 +26,7 @@ public class OncallController {
 
     public void play() {
         StartDate startDate = inputValidStartDate();
+        Dates dates = oncallService.generateDates(startDate);
 
         Pair<Employees, Employees> employeesPair = inputValidWorkdayAndHolidayEmployees();
         Employees workdayEmployees = employeesPair.getFirst();

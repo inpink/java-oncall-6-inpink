@@ -25,6 +25,8 @@ public enum DayOfWeek {
                 .orElseThrow(() -> ExceptionUtil.returnInvalidValueException());
     }
 
+
+
     public String getKoreanLabel() {
         return koreanLabel;
     }

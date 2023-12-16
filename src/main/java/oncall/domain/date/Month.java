@@ -19,12 +19,12 @@ public enum Month {
 
     private static final String suffix = "월";
     private final int monthNumber;
-    private final int days;
+    private final int lastDay;
 
 
-    Month(int monthNumber, int days) {
+    Month(int monthNumber, int lastDay) {
         this.monthNumber = monthNumber;
-        this.days = days;
+        this.lastDay = lastDay;
     }
 
     public static Month findMonth(int month) {
@@ -42,7 +42,7 @@ public enum Month {
         return monthNumber;
     }
 
-    public int getDays() {
-        return days;
+    public int getLastDay() {
+        return lastDay;
     }
 }
