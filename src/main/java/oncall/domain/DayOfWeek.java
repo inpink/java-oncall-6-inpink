@@ -18,7 +18,7 @@ public enum DayOfWeek {
         this.koreanLabel = koreanLabel;
     }
 
-    public static DayOfWeek find(String dayLabel) {
+    public static DayOfWeek findDay(String dayLabel) {
         return Arrays.stream(DayOfWeek.values())
                 .filter(day -> day.koreanLabel.equals(dayLabel))
                 .findAny()

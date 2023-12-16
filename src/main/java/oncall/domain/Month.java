@@ -1,5 +1,8 @@
 package oncall.domain;
 
+import java.util.Arrays;
+import oncall.util.ExceptionUtil;
+
 public enum Month {
     JANUARY(1, 31),
     FEBRUARY(2, 28),
@@ -15,17 +18,24 @@ public enum Month {
     DECEMBER(12, 31);
 
     private static final String suffix = "월";
-    private final String koreanLabel;
+    private final int monthNumber;
     private final int days;
 
 
     Month(int monthNumber, int days) {
-        this.koreanLabel = monthNumber + suffix;
+        this.monthNumber = monthNumber;
         this.days = days;
     }
 
+    public static Month findMonth(int month) {
+        return Arrays.stream(Month.values())
+                .filter(monthNumber -> monthNumber.monthNumber == month)
+                .findAny()
+                .orElseThrow(() -> ExceptionUtil.returnInvalidValueException());
+    }
+
     public String getKoreanLabel() {
-        return koreanLabel;
+        return monthNumber + suffix;
     }
 
     public int getDays() {
