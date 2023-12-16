@@ -23,4 +23,12 @@ public class StartDate {
     private DayOfWeek toDay(String day) {
         return DayOfWeek.findDay(day);
     }
+
+    public Month getMonth() {
+        return month;
+    }
+
+    public DayOfWeek getDay() {
+        return day;
+    }
 }

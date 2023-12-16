@@ -38,6 +38,10 @@ public enum Month {
         return monthNumber + suffix;
     }
 
+    public int getMonthNumber() {
+        return monthNumber;
+    }
+
     public int getDays() {
         return days;
     }
