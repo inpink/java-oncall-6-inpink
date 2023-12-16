@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Orders {
-    private final Map<DayOfWeek, Integer> orders;
+    private final Map<Integer, DayOfWeek> orders;
 
     private Orders(DayOfWeek startDay) {
         this.orders = toOrders(startDay);
@@ -14,20 +14,25 @@ public class Orders {
         return new Orders(startDay);
     }
 
-    private Map<DayOfWeek, Integer> toOrders(DayOfWeek startDay) {
-        Map<DayOfWeek, Integer> orders = new LinkedHashMap<>();
+    public DayOfWeek findDay(int dayNumber) {
+        return orders.get(dayNumber);
+    }
+
+    private Map<Integer, DayOfWeek> toOrders(DayOfWeek startDay) {
+        Map<Integer, DayOfWeek> orders = new LinkedHashMap<>();
         DayOfWeek[] days = DayOfWeek.values();
         int startDayIndex = startDay.ordinal();
 
         for (int i = 0; i < days.length; i++) {
             int order = (startDayIndex + i) % days.length;
-            orders.put(days[order], i + 1);
+            orders.put(i + 1, days[order]);
         }
 
         return orders;
     }
 
-    public Map<DayOfWeek, Integer> getOrders() {
+    public Map<Integer, DayOfWeek> getOrders() {
         return orders;
     }
+
 }

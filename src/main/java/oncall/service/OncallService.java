@@ -1,5 +1,7 @@
 package oncall.service;
 
+import static oncall.constants.IntegerConstants.DAY_ORDER_LAST_NUMBER;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import oncall.domain.date.Dates;
@@ -19,7 +21,7 @@ public class OncallService {
         final int lastDayNumber = month.getLastDay();
 
         for (int dayNumber = 1; dayNumber <= lastDayNumber; dayNumber++) {
-            DayOfWeek day = DayOfWeek.MONDAY;
+            DayOfWeek day = orders.findDay(dayNumber % DAY_ORDER_LAST_NUMBER.getValue());
             days.put(dayNumber, day);
         }
 
