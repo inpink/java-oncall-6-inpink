@@ -1,4 +1,4 @@
-package oncall.domain.holiday;
+package oncall.domain.date.holiday;
 
 public enum LegalHoliday implements Holiday {
     NEW_YEAR(1, 1, "신정"),

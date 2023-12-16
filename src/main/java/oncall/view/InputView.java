@@ -6,7 +6,7 @@ import static oncall.messages.IOMessages.INPUT_ONCALL_NICKNAMES;
 import static oncall.messages.IOMessages.WORKDAY;
 
 import oncall.domain.Employees;
-import oncall.domain.StartDate;
+import oncall.domain.date.StartDate;
 import oncall.mapper.EmployeesMapper;
 import oncall.mapper.StartDateMapper;
 import oncall.util.InputUtil;

@@ -4,7 +4,7 @@ import static oncall.constants.IntegerConstants.MONTH_AND_DAY_COUNT;
 
 import java.util.Arrays;
 import java.util.List;
-import oncall.domain.StartDate;
+import oncall.domain.date.StartDate;
 import oncall.util.ExceptionUtil;
 import oncall.util.StringUtil;
 import oncall.validation.IntegerValidator;

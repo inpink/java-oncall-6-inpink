@@ -1,4 +1,4 @@
-package oncall.domain.holiday;
+package oncall.domain.date.holiday;
 
 import java.util.Arrays;
 import java.util.List;

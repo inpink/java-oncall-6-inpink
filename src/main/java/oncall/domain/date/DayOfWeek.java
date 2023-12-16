@@ -1,4 +1,4 @@
-package oncall.domain;
+package oncall.domain.date;
 
 import java.util.Arrays;
 import oncall.util.ExceptionUtil;

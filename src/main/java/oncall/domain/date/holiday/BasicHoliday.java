@@ -1,4 +1,4 @@
-package oncall.domain.holiday;
+package oncall.domain.date.holiday;
 
 public enum BasicHoliday implements Holiday {
     SATURDAY("토요일"),
