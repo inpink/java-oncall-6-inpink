@@ -28,14 +28,14 @@ public class OncallController {
     }
 
     public void play() {
-        StartDate startDate = inputValidStartDate();
-        Dates dates = oncallService.generateDates(startDate);
+        final StartDate startDate = inputValidStartDate();
+        final Dates dates = oncallService.generateDates(startDate);
 
-        Pair<Employees, Employees> employeesPair = inputValidWorkdayAndHolidayEmployees();
-        Employees workdayEmployees = employeesPair.getFirst();
-        Employees holidayEmployees = employeesPair.getSecond();
+        final Pair<Employees, Employees> employeesPair = inputValidWorkdayAndHolidayEmployees();
+        final Employees workdayEmployees = employeesPair.getFirst();
+        final Employees holidayEmployees = employeesPair.getSecond();
 
-        Oncall oncall = oncallService.generateOncall(
+        final Oncall oncall = oncallService.generateOncall(
                 startDate, dates,
                 workdayEmployees,
                 holidayEmployees);
@@ -61,8 +61,8 @@ public class OncallController {
     private Pair<Employees, Employees> inputValidWorkdayAndHolidayEmployees() {
         while (true) {
             try {
-                Employees workdayEmployees = inputView.inputWorkdayEmployees();
-                Employees holidayEmployees = inputView.inputHolidayEmployees();
+                final Employees workdayEmployees = inputView.inputWorkdayEmployees();
+                final Employees holidayEmployees = inputView.inputHolidayEmployees();
                 return new Pair<>(workdayEmployees, holidayEmployees);
             } catch (IllegalArgumentException e) {
                 outputView.outputErrorMessage(INVALID_INPUT.getMessage());
@@ -70,8 +70,10 @@ public class OncallController {
         }
     }
 
-    private void outputResult(StartDate startDate, Dates dates, Oncall oncall) {
-        OncallDto oncallDto = OncallMapper.from(startDate, dates, oncall);
+    private void outputResult(final StartDate startDate,
+                              final Dates dates,
+                              final Oncall oncall) {
+        final OncallDto oncallDto = OncallMapper.from(startDate, dates, oncall);
         outputView.outputOncallResult(oncallDto);
     }
 }

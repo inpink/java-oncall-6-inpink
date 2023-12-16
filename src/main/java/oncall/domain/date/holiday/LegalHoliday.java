@@ -28,7 +28,4 @@ public enum LegalHoliday implements Holiday {
         return day;
     }
 
-    public String getName() {
-        return name;
-    }
 }

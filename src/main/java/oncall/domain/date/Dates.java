@@ -7,7 +7,7 @@ public class Dates {
     private final Month month;
     private final Map<Integer, DayOfWeek> days;
 
-    private Dates(Month month, Map<Integer, DayOfWeek> days) {
+    private Dates(final Month month, final Map<Integer, DayOfWeek> days) {
         this.month = month;
         this.days = days;
     }

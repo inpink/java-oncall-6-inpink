@@ -1,6 +1,6 @@
 package oncall.service;
 
-import static oncall.constants.IntegerConstants.DAY_ORDER_LAST_NUMBER;
+import static oncall.constants.IntegerConstants.DAY_A_WEEK_SIZE;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,7 +36,7 @@ public class OncallService {
     }
 
     private static int calculateDayNumber(int dayNumber) {
-        return dayNumber % (DAY_ORDER_LAST_NUMBER.getValue());
+        return dayNumber % (DAY_A_WEEK_SIZE.getValue());
     }
 
     public Dates generateDates(StartDate startDate) {

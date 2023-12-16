@@ -3,8 +3,7 @@ package oncall.constants;
 public enum IntegerConstants {
 
     MONTH_AND_DAY_COUNT(2),
-    DAY_ORDER_FIRST_NUMBER(1),
-    DAY_ORDER_LAST_NUMBER(7);
+    DAY_A_WEEK_SIZE(7);
 
     private final int value;
 
