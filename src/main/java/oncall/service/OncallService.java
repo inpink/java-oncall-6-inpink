@@ -17,27 +17,6 @@ import oncall.domain.date.StartDate;
 import oncall.domain.date.holiday.Holidays;
 
 public class OncallService {
-    private static boolean isLastOncallEmployee(List<Employee> oncallEmployees, Employee employeeCandidate) {
-        if (oncallEmployees.isEmpty()) {
-            return false;
-        }
-        return oncallEmployees.get(oncallEmployees.size() - 1).equals(employeeCandidate);
-    }
-
-    private static Map<Integer, DayOfWeek> generateDays(Month month, Orders orders) {
-        Map<Integer, DayOfWeek> days = new LinkedHashMap<>();
-        final int lastDayNumber = month.getLastDay();
-
-        for (int dayNumber = 0; dayNumber < lastDayNumber; dayNumber++) {
-            DayOfWeek day = orders.findDay(calculateDayNumber(dayNumber));
-            days.put(dayNumber + 1, day);
-        }
-        return days;
-    }
-
-    private static int calculateDayNumber(int dayNumber) {
-        return dayNumber % (DAY_A_WEEK_SIZE.getValue());
-    }
 
     public Dates generateDates(StartDate startDate) {
         Month month = startDate.getMonth();
@@ -63,7 +42,7 @@ public class OncallService {
             if (Holidays.isHoliday(monthNumber, dayNumber, day)) {
                 assignEmployee(oncallEmployees, holidayEmployees, holidayEmployeeIndex);
             }
-            else { // 평일
+            if (!Holidays.isHoliday(monthNumber, dayNumber, day)) { // 평일
                 assignEmployee(oncallEmployees, workdayEmployees, workdayEmployeeIndex);
             }
         }
@@ -79,6 +58,28 @@ public class OncallService {
         }
         oncallEmployees.add(candidate);
         employeeIndex[0]++;
+    }
+
+    private static boolean isLastOncallEmployee(List<Employee> oncallEmployees, Employee employeeCandidate) {
+        if (oncallEmployees.isEmpty()) {
+            return false;
+        }
+        return oncallEmployees.get(oncallEmployees.size() - 1).equals(employeeCandidate);
+    }
+
+    private static Map<Integer, DayOfWeek> generateDays(Month month, Orders orders) {
+        Map<Integer, DayOfWeek> days = new LinkedHashMap<>();
+        final int lastDayNumber = month.getLastDay();
+
+        for (int dayNumber = 0; dayNumber < lastDayNumber; dayNumber++) {
+            DayOfWeek day = orders.findDay(calculateDayNumber(dayNumber));
+            days.put(dayNumber + 1, day);
+        }
+        return days;
+    }
+
+    private static int calculateDayNumber(int dayNumber) {
+        return dayNumber % (DAY_A_WEEK_SIZE.getValue());
     }
 
 }
