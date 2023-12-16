@@ -5,11 +5,11 @@ import java.util.Map;
 
 public class Dates {
     private final Month month;
-    private final Map<Integer, DayOfWeek> day;
+    private final Map<Integer, DayOfWeek> days;
 
-    private Dates(Month month, Map<Integer, DayOfWeek> day) {
+    private Dates(Month month, Map<Integer, DayOfWeek> days) {
         this.month = month;
-        this.day = day;
+        this.days = days;
     }
 
     public static Dates create(Month month, Map<Integer, DayOfWeek> days) {
@@ -17,4 +17,13 @@ public class Dates {
     }
 
     //TODO: integer받아서 is휴일인가 boolean 반환
+
+
+    public Month getMonth() {
+        return month;
+    }
+
+    public Map<Integer, DayOfWeek> getDays() {
+        return days;
+    }
 }

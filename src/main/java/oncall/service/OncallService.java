@@ -20,9 +20,10 @@ public class OncallService {
 
         final int lastDayNumber = month.getLastDay();
 
-        for (int dayNumber = 1; dayNumber <= lastDayNumber; dayNumber++) {
-            DayOfWeek day = orders.findDay(dayNumber % DAY_ORDER_LAST_NUMBER.getValue());
-            days.put(dayNumber, day);
+        for (int dayNumber = 0; dayNumber < lastDayNumber; dayNumber++) {
+            DayOfWeek day = orders.findDay(dayNumber % (DAY_ORDER_LAST_NUMBER.getValue()));
+            System.out.println(dayNumber + " " + day + " " + dayNumber % (DAY_ORDER_LAST_NUMBER.getValue()));
+            days.put(dayNumber + 1, day);
         }
 
         return Dates.create(month, days);

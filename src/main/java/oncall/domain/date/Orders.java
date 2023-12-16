@@ -25,7 +25,7 @@ public class Orders {
 
         for (int i = 0; i < days.length; i++) {
             int order = (startDayIndex + i) % days.length;
-            orders.put(i + 1, days[order]);
+            orders.put(i, days[order]);
         }
 
         return orders;
