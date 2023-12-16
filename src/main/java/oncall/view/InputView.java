@@ -1,5 +1,6 @@
 package oncall.view;
 
+import static oncall.messages.IOMessages.HOLIDAY;
 import static oncall.messages.IOMessages.INPUT_ONCALL_MONTH_AND_DAY;
 import static oncall.messages.IOMessages.INPUT_ONCALL_NICKNAMES;
 import static oncall.messages.IOMessages.WORKDAY;
@@ -20,6 +21,13 @@ public class InputView {
 
     public Employees inputWorkdayEmployees() {
         System.out.println(WORKDAY.getMessage() + INPUT_ONCALL_NICKNAMES.getMessage());
+        String input = InputUtil.input();
+
+        return EmployeesMapper.toEmployees(input);
+    }
+
+    public Employees inputHolidayEmployees() {
+        System.out.println(HOLIDAY.getMessage() + INPUT_ONCALL_NICKNAMES.getMessage());
         String input = InputUtil.input();
 
         return EmployeesMapper.toEmployees(input);

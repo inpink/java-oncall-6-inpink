@@ -14,7 +14,9 @@ public class Employees {
     }
 
     private List<Employee> toEmployees(List<String> employeesNames) {
-
+        return employeesNames.stream()
+                .map(name -> Employee.create(name))
+                .toList();
     }
 
 }

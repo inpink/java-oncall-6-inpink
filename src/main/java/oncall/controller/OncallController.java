@@ -6,6 +6,7 @@ import oncall.domain.Employees;
 import oncall.domain.StartDate;
 import oncall.service.OncallService;
 import oncall.util.InputUtil;
+import oncall.util.Pair;
 import oncall.view.InputView;
 import oncall.view.OutputView;
 
@@ -24,8 +25,12 @@ public class OncallController {
 
     public void play() {
         StartDate startDate = inputValidStartDate();
-        Employees workdayEmployees = inputValidWorkdayEmployees();
-        Employees holidayEmployees = inputValidHolidayEmployees();
+
+        Pair<Employees, Employees> employeesPair = inputValidWorkdayAndHolidayEmployees();
+        Employees workdayEmployees = employeesPair.getFirst();
+        Employees holidayEmployees = employeesPair.getSecond();
+
+
     }
 
     private StartDate inputValidStartDate() {
@@ -51,11 +56,9 @@ public class OncallController {
                 return new Pair<>(workdayEmployees, holidayEmployees);
             } catch (IllegalArgumentException e) {
                 outputView.outputErrorMessage(INVALID_INPUT.getMessage());
-                // 예외 발생 시 메시지 출력 후 처음부터 재시작
             }
         }
     }
-
 
     private void outputResult() {
 
