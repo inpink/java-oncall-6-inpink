@@ -37,34 +37,50 @@ public class OncallService {
         int[] workdayEmployeeIndex = new int[]{0};
         int[] holidayEmployeeIndex = new int[]{0};
 
+        boolean isWorkdayChanged = false;
+        boolean isHolidayChanged = false;
+
         for (int dayNumber : days.keySet()) {
             DayOfWeek day = days.get(dayNumber);
+
             if (Holidays.isHoliday(monthNumber, dayNumber, day)) {
-                assignEmployee(oncallEmployees, holidayEmployees, holidayEmployeeIndex);
+                isWorkdayChanged = assignEmployee(oncallEmployees, holidayEmployees,
+                        holidayEmployeeIndex, isWorkdayChanged);
             }
-            if (!Holidays.isHoliday(monthNumber, dayNumber, day)) { // 평일
-                assignEmployee(oncallEmployees, workdayEmployees, workdayEmployeeIndex);
+
+            if (!Holidays.isHoliday(monthNumber, dayNumber, day)) {
+                isHolidayChanged = assignEmployee(oncallEmployees, workdayEmployees,
+                        workdayEmployeeIndex, isWorkdayChanged);
             }
         }
-
         return Oncall.create(oncallEmployees);
     }
 
-    private void assignEmployee(List<Employee> oncallEmployees, Employees employees, int[] employeeIndex) {
+    private boolean assignEmployee(List<Employee> oncallEmployees, Employees employees,
+                                   int[] employeeIndex, boolean isChanged) {
         Employee candidate = employees.findEmployee(employeeIndex[0] % employees.getSize());
-        if (isLastOncallEmployee(oncallEmployees, candidate)) {
-            candidate = employees.findEmployee(employeeIndex[0]);
-            employeeIndex[0]++;
+        if (isChanged) {
+            candidate = employees.findEmployee((employeeIndex[0] - 1) % employees.getSize());
+            isChanged = false;
         }
+
+        if (isLastOncallEmployee(oncallEmployees, candidate)) {
+            candidate = employees.findEmployee((employeeIndex[0] + 1) % employees.getSize());
+            isChanged = true;
+        }
+
         oncallEmployees.add(candidate);
         employeeIndex[0]++;
+        return isChanged;
     }
 
     private static boolean isLastOncallEmployee(List<Employee> oncallEmployees, Employee employeeCandidate) {
         if (oncallEmployees.isEmpty()) {
             return false;
         }
-        return oncallEmployees.get(oncallEmployees.size() - 1).equals(employeeCandidate);
+
+        String lastEmployeeNickName = oncallEmployees.get(oncallEmployees.size() - 1).getNickName();
+        return lastEmployeeNickName.equals(employeeCandidate.getNickName());
     }
 
     private static Map<Integer, DayOfWeek> generateDays(Month month, Orders orders) {
