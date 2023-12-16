@@ -27,7 +27,6 @@ public class OncallService {
         return Dates.create(month, days);
     }
 
-
     public Oncall generateOncall(StartDate startDate,
                                  Dates dates,
                                  Employees workdayEmployees,
@@ -36,75 +35,36 @@ public class OncallService {
         Map<Integer, DayOfWeek> days = dates.getDays();
         List<Employee> oncallEmployees = new ArrayList<>();
 
-        int workdayEmployeeIndex = 0;
-        int holidayEmployeeIndex = 0;
+        int[] workdayEmployeeIndex = new int[]{0};
+        int[] holidayEmployeeIndex = new int[]{0};
+
         for (int dayNumber : days.keySet()) {
             DayOfWeek day = days.get(dayNumber);
 
-            boolean isWorkdaySequenceChanged = false;
-            boolean isHolidaySequenceChanged = false;
             if (Holidays.isHoliday(monthNumber, dayNumber, day)) { // 휴일이라면
-                System.out.println("휴일");
-                Employee holidaymployeeCandidate
-                        = holidayEmployees.findEmployee(holidayEmployeeIndex);
-
-                if (isHolidaySequenceChanged) {
-                    Employee beforeHolidaymployeeCandidate
-                            = holidayEmployees.findEmployee(holidayEmployeeIndex - 1);
-                    holidayEmployeeIndex++;
-                    isHolidaySequenceChanged = false;
-                } else {
-                    // 이전날에 수아가 이미 일함
-                    if (isLastOncallEmployee(oncallEmployees, holidaymployeeCandidate)) {
-                        Employee nextHolidaymployeeCandidate
-                                = holidayEmployees.findEmployee(holidayEmployeeIndex + 1);
-                        oncallEmployees.add(nextHolidaymployeeCandidate);
-                        holidayEmployeeIndex++;
-                        isHolidaySequenceChanged = true;
-                    } else { // 이전날에 수아가 이미 일 안함
-                        oncallEmployees.add(holidaymployeeCandidate);
-                        holidayEmployeeIndex++;
-                        isHolidaySequenceChanged = false;
-                    }
-                }
-
-            }
-
-            if (!Holidays.isHoliday(monthNumber, dayNumber, day)) { // 평일
-                Employee workdaymployeeCandidate
-                        = workdayEmployees.findEmployee(workdayEmployeeIndex);
-
-                if (isWorkdaySequenceChanged) {
-                    Employee beforeWorkdaymployeeCandidate
-                            = workdayEmployees.findEmployee(workdayEmployeeIndex - 1);
-                    workdayEmployeeIndex++;
-                    isWorkdaySequenceChanged = false;
-                }
-                else {
-                    // 이전날에 수아가 이미 일함
-                    if (isLastOncallEmployee(oncallEmployees, workdaymployeeCandidate)) {
-                        Employee nextWorkdaymployeeCandidate
-                                = workdayEmployees.findEmployee(workdayEmployeeIndex + 1);
-                        oncallEmployees.add(nextWorkdaymployeeCandidate);
-                        workdayEmployeeIndex++;
-                        isWorkdaySequenceChanged = true;
-                    } else { // 이전날에 수아가 이미 일 안함
-                        oncallEmployees.add(workdaymployeeCandidate);
-                        workdayEmployeeIndex++;
-                        isWorkdaySequenceChanged = false;
-                    }
-                }
-
+                assignEmployee(oncallEmployees, holidayEmployees, holidayEmployeeIndex);
+            } else { // 평일
+                assignEmployee(oncallEmployees, workdayEmployees, workdayEmployeeIndex);
             }
         }
 
-        oncallEmployees.stream().forEach(a -> System.out.print(a.getNickName()+ " "));
+        oncallEmployees.forEach(employee -> System.out.print(employee.getNickName() + " "));
 
         return Oncall.create(oncallEmployees);
     }
 
+    private void assignEmployee(List<Employee> oncallEmployees, Employees employees, int[] employeeIndex) {
+        Employee candidate = employees.findEmployee(employeeIndex[0]);
+        if (isLastOncallEmployee(oncallEmployees, candidate)) {
+            employeeIndex[0]++;
+            candidate = employees.findEmployee(employeeIndex[0]);
+        }
+        oncallEmployees.add(candidate);
+        employeeIndex[0]++;
+    }
+
     private static boolean isLastOncallEmployee(List<Employee> oncallEmployees, Employee employeeCandidate) {
-        if (oncallEmployees.size() == 0) {
+        if (oncallEmployees.isEmpty()) {
             return false;
         }
         return oncallEmployees.get(oncallEmployees.size() - 1).equals(employeeCandidate);
