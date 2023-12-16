@@ -9,6 +9,10 @@ import oncall.util.StringUtil;
 
 public class EmployeesMapper {
 
+    private EmployeesMapper() {
+
+    }
+
     public static Employees toEmployees(String input) {
         List<String> separated = seperate(input);
         validateDuplicated(separated);

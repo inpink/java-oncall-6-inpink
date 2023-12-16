@@ -2,10 +2,15 @@ package oncall.controller;
 
 import static oncall.messages.ErrorMessages.INVALID_INPUT;
 
+import java.util.List;
+import java.util.Map;
 import oncall.domain.Employees;
 import oncall.domain.date.Dates;
+import oncall.domain.date.DayOfWeek;
 import oncall.domain.date.Oncall;
 import oncall.domain.date.StartDate;
+import oncall.domain.dto.OncallDto;
+import oncall.mapper.OncallMapper;
 import oncall.service.OncallService;
 import oncall.util.InputUtil;
 import oncall.util.Pair;
@@ -34,11 +39,12 @@ public class OncallController {
         Employees holidayEmployees = employeesPair.getSecond();
 
         Oncall oncall = oncallService.generateOncall(
-                startDate,
-                dates,
+                startDate, dates,
                 workdayEmployees,
                 holidayEmployees);
-        outputResult(oncall);
+
+        OncallDto oncallDto = OncallMapper.from(startDate, dates, oncall);
+        outputResult(oncallDto);
     }
 
     private StartDate inputValidStartDate() {
@@ -68,7 +74,7 @@ public class OncallController {
         }
     }
 
-    private void outputResult(Oncall oncall) {
-        outputView.outputOncallResult(oncall);
+    private void outputResult(OncallDto oncallDto) {
+        outputView.outputOncallResult(oncallDto);
     }
 }

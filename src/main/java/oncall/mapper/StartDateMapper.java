@@ -10,6 +10,11 @@ import oncall.util.StringUtil;
 import oncall.validation.IntegerValidator;
 
 public class StartDateMapper {
+
+    private StartDateMapper() {
+
+    }
+
     public static StartDate toStartDate(String input) {
         String deleteSpaces = StringUtil.removeAllSpaces(input);
         List<String> separated = Arrays.stream(deleteSpaces.split(","))

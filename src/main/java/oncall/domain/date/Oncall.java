@@ -14,4 +14,8 @@ public class Oncall {
     public static Oncall create(List<Employee> oncallEmployees) {
         return new Oncall(oncallEmployees);
     }
+
+    public List<Employee> getOncallEmployees() {
+        return oncallEmployees;
+    }
 }
