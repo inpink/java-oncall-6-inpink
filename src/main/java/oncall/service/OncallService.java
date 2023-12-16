@@ -16,16 +16,23 @@ public class OncallService {
         DayOfWeek startDay = startDate.getDay();
         Orders orders = Orders.create(startDay);
 
-        Map<Integer, DayOfWeek> days = new LinkedHashMap<>();
+        Map<Integer, DayOfWeek> days = generateDays(month, orders);
 
+        return Dates.create(month, days);
+    }
+
+    private static Map<Integer, DayOfWeek> generateDays(Month month, Orders orders) {
+        Map<Integer, DayOfWeek> days = new LinkedHashMap<>();
         final int lastDayNumber = month.getLastDay();
 
         for (int dayNumber = 0; dayNumber < lastDayNumber; dayNumber++) {
-            DayOfWeek day = orders.findDay(dayNumber % (DAY_ORDER_LAST_NUMBER.getValue()));
-            System.out.println(dayNumber + " " + day + " " + dayNumber % (DAY_ORDER_LAST_NUMBER.getValue()));
+            DayOfWeek day = orders.findDay(calculateDayNumber(dayNumber));
             days.put(dayNumber + 1, day);
         }
+        return days;
+    }
 
-        return Dates.create(month, days);
+    private static int calculateDayNumber(int dayNumber) {
+        return dayNumber % (DAY_ORDER_LAST_NUMBER.getValue());
     }
 }
