@@ -15,21 +15,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class AppConfigTest {
     private static AppConfig config;
 
-    @BeforeEach
-    void setUp() {
-        config = AppConfig.getInstance();
-    }
-
-    static class ObjectSupplierTuple {
-        final Supplier<Object> supplier;
-        final Class<?> expectedType;
-
-        ObjectSupplierTuple(final Supplier<Object> supplier, final Class<?> expectedType) {
-            this.supplier = supplier;
-            this.expectedType = expectedType;
-        }
-    }
-
     static Stream<ObjectSupplierTuple> singletonSuppliers() {
         return Stream.of(
                 new ObjectSupplierTuple(() -> config.outputView(), OutputView.class),
@@ -37,6 +22,11 @@ public class AppConfigTest {
                 new ObjectSupplierTuple(() -> config.oncallController(), OncallController.class),
                 new ObjectSupplierTuple(() -> config.oncallService(), OncallService.class)
         );
+    }
+
+    @BeforeEach
+    void setUp() {
+        config = AppConfig.getInstance();
     }
 
     @ParameterizedTest(name = "{0}은 싱글톤이며, {1}의 객체이다.")
@@ -54,6 +44,16 @@ public class AppConfigTest {
         assertThat(firstInstance).isNotNull();
         assertThat(firstInstance).isInstanceOf(expectedType);
         assertThat(firstInstance).isSameAs(secondInstance);
+    }
+
+    static class ObjectSupplierTuple {
+        final Supplier<Object> supplier;
+        final Class<?> expectedType;
+
+        ObjectSupplierTuple(final Supplier<Object> supplier, final Class<?> expectedType) {
+            this.supplier = supplier;
+            this.expectedType = expectedType;
+        }
     }
 
 }

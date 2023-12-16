@@ -22,7 +22,7 @@ public final class IntegerValidator {
     public static void validateInteger(List<String> separated) {
         boolean result = separated
                 .stream()
-                .allMatch( value -> IntegerUtil.isInteger(value));
+                .allMatch(value -> IntegerUtil.isInteger(value));
 
         if (!result) {
             ExceptionUtil.throwInvalidValueException();

@@ -8,15 +8,37 @@ import java.util.List;
 import java.util.Map;
 import oncall.domain.Employee;
 import oncall.domain.Employees;
+import oncall.domain.Orders;
 import oncall.domain.date.Dates;
 import oncall.domain.date.DayOfWeek;
 import oncall.domain.date.Month;
-import oncall.domain.Orders;
 import oncall.domain.date.Oncall;
 import oncall.domain.date.StartDate;
 import oncall.domain.date.holiday.Holidays;
 
 public class OncallService {
+    private static boolean isLastOncallEmployee(List<Employee> oncallEmployees, Employee employeeCandidate) {
+        if (oncallEmployees.isEmpty()) {
+            return false;
+        }
+        return oncallEmployees.get(oncallEmployees.size() - 1).equals(employeeCandidate);
+    }
+
+    private static Map<Integer, DayOfWeek> generateDays(Month month, Orders orders) {
+        Map<Integer, DayOfWeek> days = new LinkedHashMap<>();
+        final int lastDayNumber = month.getLastDay();
+
+        for (int dayNumber = 0; dayNumber < lastDayNumber; dayNumber++) {
+            DayOfWeek day = orders.findDay(calculateDayNumber(dayNumber));
+            days.put(dayNumber + 1, day);
+        }
+        return days;
+    }
+
+    private static int calculateDayNumber(int dayNumber) {
+        return dayNumber % (DAY_ORDER_LAST_NUMBER.getValue());
+    }
+
     public Dates generateDates(StartDate startDate) {
         Month month = startDate.getMonth();
         DayOfWeek startDay = startDate.getDay();
@@ -41,14 +63,13 @@ public class OncallService {
         for (int dayNumber : days.keySet()) {
             DayOfWeek day = days.get(dayNumber);
 
-            if (Holidays.isHoliday(monthNumber, dayNumber, day)) { // 휴일이라면
+            if (Holidays.isHoliday(monthNumber, dayNumber, day)) {
                 assignEmployee(oncallEmployees, holidayEmployees, holidayEmployeeIndex);
-            } else { // 평일
+            }
+            else { // 평일
                 assignEmployee(oncallEmployees, workdayEmployees, workdayEmployeeIndex);
             }
         }
-
-        oncallEmployees.forEach(employee -> System.out.print(employee.getNickName() + " "));
 
         return Oncall.create(oncallEmployees);
     }
@@ -61,28 +82,6 @@ public class OncallService {
         }
         oncallEmployees.add(candidate);
         employeeIndex[0]++;
-    }
-
-    private static boolean isLastOncallEmployee(List<Employee> oncallEmployees, Employee employeeCandidate) {
-        if (oncallEmployees.isEmpty()) {
-            return false;
-        }
-        return oncallEmployees.get(oncallEmployees.size() - 1).equals(employeeCandidate);
-    }
-
-    private static Map<Integer, DayOfWeek> generateDays(Month month, Orders orders) {
-        Map<Integer, DayOfWeek> days = new LinkedHashMap<>();
-        final int lastDayNumber = month.getLastDay();
-
-        for (int dayNumber = 0; dayNumber < lastDayNumber; dayNumber++) {
-            DayOfWeek day = orders.findDay(calculateDayNumber(dayNumber));
-            days.put(dayNumber + 1, day);
-        }
-        return days;
-    }
-
-    private static int calculateDayNumber(int dayNumber) {
-        return dayNumber % (DAY_ORDER_LAST_NUMBER.getValue());
     }
 
 }

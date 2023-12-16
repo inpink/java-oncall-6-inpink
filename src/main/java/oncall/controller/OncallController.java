@@ -2,11 +2,8 @@ package oncall.controller;
 
 import static oncall.messages.ErrorMessages.INVALID_INPUT;
 
-import java.util.List;
-import java.util.Map;
 import oncall.domain.Employees;
 import oncall.domain.date.Dates;
-import oncall.domain.date.DayOfWeek;
 import oncall.domain.date.Oncall;
 import oncall.domain.date.StartDate;
 import oncall.domain.dto.OncallDto;
@@ -43,8 +40,7 @@ public class OncallController {
                 workdayEmployees,
                 holidayEmployees);
 
-        OncallDto oncallDto = OncallMapper.from(startDate, dates, oncall);
-        outputResult(oncallDto);
+        outputResult(startDate, dates, oncall);
     }
 
     private StartDate inputValidStartDate() {
@@ -74,7 +70,8 @@ public class OncallController {
         }
     }
 
-    private void outputResult(OncallDto oncallDto) {
+    private void outputResult(StartDate startDate, Dates dates, Oncall oncall) {
+        OncallDto oncallDto = OncallMapper.from(startDate, dates, oncall);
         outputView.outputOncallResult(oncallDto);
     }
 }

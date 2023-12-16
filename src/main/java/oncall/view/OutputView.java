@@ -9,19 +9,9 @@ public class OutputView {
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
-    public void outputOncallResult(OncallDto oncallDto) {
-        int monthNumber = oncallDto.monthNumber();
-        Map<Integer, DayOfWeek> days = oncallDto.days();
-        List<String> employees = oncallDto.employees();
-
-        StringBuilder output = buildResultFormat(days, employees, monthNumber);
-
-        System.out.print(output.toString());
-    }
-
     private static StringBuilder buildResultFormat(Map<Integer, DayOfWeek> days,
                                                    List<String> employees,
-                                                  int monthNumber) {
+                                                   int monthNumber) {
         StringBuilder output = new StringBuilder();
         int employeeIndex = 0;
 
@@ -36,12 +26,23 @@ public class OutputView {
         return output;
     }
 
-    private static String formatDateAndEmployee(int monthNumber, int dayNumber, DayOfWeek dayOfWeek, String employeeName) {
+    private static String formatDateAndEmployee(int monthNumber, int dayNumber, DayOfWeek dayOfWeek,
+                                                String employeeName) {
         return String.format("%d월 %d일 %s %s",
                 monthNumber,
                 dayNumber,
                 dayOfWeek.getKoreanLabel(),
                 employeeName);
+    }
+
+    public void outputOncallResult(OncallDto oncallDto) {
+        int monthNumber = oncallDto.monthNumber();
+        Map<Integer, DayOfWeek> days = oncallDto.days();
+        List<String> employees = oncallDto.employees();
+
+        StringBuilder output = buildResultFormat(days, employees, monthNumber);
+
+        System.out.print(output.toString());
     }
 
     public void outputErrorMessage(String message) {
