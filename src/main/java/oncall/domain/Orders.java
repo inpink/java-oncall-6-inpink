@@ -1,7 +1,8 @@
-package oncall.domain.date;
+package oncall.domain;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import oncall.domain.date.DayOfWeek;
 
 public class Orders {
     private final Map<Integer, DayOfWeek> orders;

@@ -4,6 +4,7 @@ import static oncall.messages.ErrorMessages.INVALID_INPUT;
 
 import oncall.domain.Employees;
 import oncall.domain.date.Dates;
+import oncall.domain.date.Oncall;
 import oncall.domain.date.StartDate;
 import oncall.service.OncallService;
 import oncall.util.InputUtil;
@@ -32,7 +33,12 @@ public class OncallController {
         Employees workdayEmployees = employeesPair.getFirst();
         Employees holidayEmployees = employeesPair.getSecond();
 
-
+        Oncall oncall = oncallService.generateOncall(
+                startDate,
+                dates,
+                workdayEmployees,
+                holidayEmployees);
+        outputResult(oncall);
     }
 
     private StartDate inputValidStartDate() {
@@ -62,7 +68,7 @@ public class OncallController {
         }
     }
 
-    private void outputResult() {
-
+    private void outputResult(Oncall oncall) {
+        outputView.outputOncallResult(oncall);
     }
 }

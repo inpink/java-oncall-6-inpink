@@ -10,4 +10,8 @@ public class Employee {
     public static Employee create(String nickName) {
         return new Employee(nickName);
     }
+
+    public String getNickName() {
+        return nickName;
+    }
 }

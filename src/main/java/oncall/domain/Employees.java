@@ -19,4 +19,7 @@ public class Employees {
                 .toList();
     }
 
+    public Employee findEmployee(int index) {
+        return employees.get(index);
+    }
 }

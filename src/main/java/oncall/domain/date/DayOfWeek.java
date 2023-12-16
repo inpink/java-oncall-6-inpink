@@ -12,6 +12,7 @@ public enum DayOfWeek {
     FRIDAY("금"),
     SATURDAY("토");
 
+    private static final String suffix = "요일";
     private final String koreanLabel;
 
     DayOfWeek(String koreanLabel) {
@@ -25,10 +26,12 @@ public enum DayOfWeek {
                 .orElseThrow(() -> ExceptionUtil.returnInvalidValueException());
     }
 
-
-
     public String getKoreanLabel() {
         return koreanLabel;
+    }
+
+    public String getKoreanDescription() {
+        return koreanLabel + suffix;
     }
 }
 
