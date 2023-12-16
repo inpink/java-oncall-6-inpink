@@ -1,8 +1,12 @@
 package oncall.view;
 
+import static oncall.messages.IOMessages.HOLIDAY;
+
 import java.util.List;
 import java.util.Map;
 import oncall.domain.date.DayOfWeek;
+import oncall.domain.date.Month;
+import oncall.domain.date.holiday.Holidays;
 import oncall.domain.dto.OncallDto;
 
 public class OutputView {
@@ -26,15 +30,6 @@ public class OutputView {
         return output;
     }
 
-    private static String formatDateAndEmployee(int monthNumber, int dayNumber, DayOfWeek dayOfWeek,
-                                                String employeeName) {
-        return String.format("%d월 %d일 %s %s",
-                monthNumber,
-                dayNumber,
-                dayOfWeek.getKoreanLabel(),
-                employeeName);
-    }
-
     public void outputOncallResult(OncallDto oncallDto) {
         int monthNumber = oncallDto.monthNumber();
         Map<Integer, DayOfWeek> days = oncallDto.days();
@@ -47,5 +42,28 @@ public class OutputView {
 
     public void outputErrorMessage(String message) {
         System.out.println(message);
+    }
+
+    private static String formatDateAndEmployee(final int monthNumber,
+                                                final int dayNumber,
+                                                final DayOfWeek dayOfWeek,
+                                                final String employeeName) {
+        final String koreanDayLabel = dayOfWeek.getKoreanLabel();
+        return String.format("%d월 %d일 %s%s %s",
+                monthNumber,
+                dayNumber,
+                koreanDayLabel,
+                formatHolidayAndWeekday(monthNumber, dayNumber, koreanDayLabel),
+                employeeName);
+    }
+
+    private static String formatHolidayAndWeekday(final int monthNumber,
+                                                  final int dayNumber,
+                                                  final String koreanDayLabel) {
+        if (!Holidays.isBasicHoliday(DayOfWeek.findDay(koreanDayLabel))
+                && Holidays.isLegalHoliday(Month.findMonth(monthNumber), dayNumber)) {
+            return "(" + HOLIDAY.getMessage() + ")";
+        }
+        return "";
     }
 }

@@ -20,14 +20,14 @@ public class InputView {
     }
 
     public Employees inputWorkdayEmployees() {
-        System.out.print(WORKDAY.getMessage() + INPUT_ONCALL_NICKNAMES.getMessage());
+        System.out.print(WORKDAY.getMessage() + " " + INPUT_ONCALL_NICKNAMES.getMessage());
         String input = InputUtil.input();
 
         return EmployeesMapper.toEmployees(input);
     }
 
     public Employees inputHolidayEmployees() {
-        System.out.print(HOLIDAY.getMessage() + INPUT_ONCALL_NICKNAMES.getMessage());
+        System.out.print(HOLIDAY.getMessage() + " " + INPUT_ONCALL_NICKNAMES.getMessage());
         String input = InputUtil.input();
 
         return EmployeesMapper.toEmployees(input);
