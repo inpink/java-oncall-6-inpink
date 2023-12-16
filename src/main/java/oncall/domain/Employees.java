@@ -1,11 +1,16 @@
 package oncall.domain;
 
+import static oncall.constants.IntegerConstants.MAX_EMPLOYEES_COUNT;
+import static oncall.constants.IntegerConstants.MIN_EMPLOYEES_COUNT;
+
 import java.util.List;
+import oncall.validation.IntegerValidator;
 
 public class Employees {
     private final List<Employee> employees;
 
     private Employees(List<String> employeesNames) {
+        validateSize(employeesNames);
         this.employees = toEmployees(employeesNames);
     }
 
@@ -21,5 +26,13 @@ public class Employees {
 
     public Employee findEmployee(int index) {
         return employees.get(index);
+    }
+
+    private void validateSize(List<String> employeesNames) {
+        IntegerValidator.validateInRange(
+                employeesNames.size(),
+                MIN_EMPLOYEES_COUNT.getValue(),
+                MAX_EMPLOYEES_COUNT.getValue()
+        );
     }
 }
