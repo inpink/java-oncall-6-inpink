@@ -13,23 +13,6 @@ public class OutputView {
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
-    private static StringBuilder buildResultFormat(Map<Integer, DayOfWeek> days,
-                                                   List<String> employees,
-                                                   int monthNumber) {
-        StringBuilder output = new StringBuilder();
-        int employeeIndex = 0;
-
-        for (Map.Entry<Integer, DayOfWeek> entry : days.entrySet()) {
-            int dayNumber = entry.getKey();
-            DayOfWeek dayOfWeek = entry.getValue();
-            String employeeName = employees.get(employeeIndex++);
-
-            output.append(formatDateAndEmployee(monthNumber, dayNumber, dayOfWeek, employeeName));
-            output.append(LINE_SEPARATOR);
-        }
-        return output;
-    }
-
     public void outputOncallResult(OncallDto oncallDto) {
         int monthNumber = oncallDto.monthNumber();
         Map<Integer, DayOfWeek> days = oncallDto.days();
@@ -42,6 +25,30 @@ public class OutputView {
 
     public void outputErrorMessage(String message) {
         System.out.println(message);
+    }
+
+    private static StringBuilder buildResultFormat(Map<Integer, DayOfWeek> days,
+                                                   List<String> employees,
+                                                   int monthNumber) {
+        StringBuilder output = new StringBuilder();
+        int employeeIndex = 0;
+        int lastEntryIndex = days.size();
+
+        for (Map.Entry<Integer, DayOfWeek> entry : days.entrySet()) {
+            int dayNumber = entry.getKey();
+            DayOfWeek dayOfWeek = entry.getValue();
+            String employeeName = employees.get(employeeIndex++);
+
+            output.append(formatDateAndEmployee(monthNumber, dayNumber, dayOfWeek, employeeName));
+            appendLineSeparator(employeeIndex, lastEntryIndex, output);
+        }
+        return output;
+    }
+
+    private static void appendLineSeparator(int employeeIndex, int lastEntryIndex, StringBuilder output) {
+        if (employeeIndex < lastEntryIndex) {
+            output.append(LINE_SEPARATOR);
+        }
     }
 
     private static String formatDateAndEmployee(final int monthNumber,
