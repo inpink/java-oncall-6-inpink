@@ -49,10 +49,8 @@ public class OncallService {
         return Dates.create(month, days);
     }
 
-    public Oncall generateOncall(StartDate startDate,
-                                 Dates dates,
-                                 Employees workdayEmployees,
-                                 Employees holidayEmployees) {
+    public Oncall generateOncall(StartDate startDate, Dates dates,
+                                 Employees workdayEmployees, Employees holidayEmployees) {
         Month monthNumber = startDate.getMonth();
         Map<Integer, DayOfWeek> days = dates.getDays();
         List<Employee> oncallEmployees = new ArrayList<>();
@@ -62,7 +60,6 @@ public class OncallService {
 
         for (int dayNumber : days.keySet()) {
             DayOfWeek day = days.get(dayNumber);
-
             if (Holidays.isHoliday(monthNumber, dayNumber, day)) {
                 assignEmployee(oncallEmployees, holidayEmployees, holidayEmployeeIndex);
             }
@@ -75,10 +72,10 @@ public class OncallService {
     }
 
     private void assignEmployee(List<Employee> oncallEmployees, Employees employees, int[] employeeIndex) {
-        Employee candidate = employees.findEmployee(employeeIndex[0]);
+        Employee candidate = employees.findEmployee(employeeIndex[0] % employees.getSize());
         if (isLastOncallEmployee(oncallEmployees, candidate)) {
-            employeeIndex[0]++;
             candidate = employees.findEmployee(employeeIndex[0]);
+            employeeIndex[0]++;
         }
         oncallEmployees.add(candidate);
         employeeIndex[0]++;
