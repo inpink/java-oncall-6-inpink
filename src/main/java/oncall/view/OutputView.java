@@ -14,6 +14,14 @@ public class OutputView {
         Map<Integer, DayOfWeek> days = oncallDto.days();
         List<String> employees = oncallDto.employees();
 
+        StringBuilder output = buildResultFormat(days, employees, monthNumber);
+
+        System.out.print(output.toString());
+    }
+
+    private static StringBuilder buildResultFormat(Map<Integer, DayOfWeek> days,
+                                                   List<String> employees,
+                                                  int monthNumber) {
         StringBuilder output = new StringBuilder();
         int employeeIndex = 0;
 
@@ -22,11 +30,18 @@ public class OutputView {
             DayOfWeek dayOfWeek = entry.getValue();
             String employeeName = employees.get(employeeIndex++);
 
-            output.append(String.format("%d월 %d일 %s %s", monthNumber, dayNumber, dayOfWeek.getKoreanLabel(), employeeName));
+            output.append(formatDateAndEmployee(monthNumber, dayNumber, dayOfWeek, employeeName));
             output.append(LINE_SEPARATOR);
         }
+        return output;
+    }
 
-        System.out.print(output.toString());
+    private static String formatDateAndEmployee(int monthNumber, int dayNumber, DayOfWeek dayOfWeek, String employeeName) {
+        return String.format("%d월 %d일 %s %s",
+                monthNumber,
+                dayNumber,
+                dayOfWeek.getKoreanLabel(),
+                employeeName);
     }
 
     public void outputErrorMessage(String message) {
