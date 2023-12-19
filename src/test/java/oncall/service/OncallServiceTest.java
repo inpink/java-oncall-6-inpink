@@ -29,7 +29,6 @@ class OncallServiceTest {
                                 9, DayOfWeek.SATURDAY
                         )
                 )
-                // 추가 테스트 케이스
         );
     }
 

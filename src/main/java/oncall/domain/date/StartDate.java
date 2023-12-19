@@ -7,7 +7,6 @@ public class StartDate {
     private final DayOfWeek day;
 
     public StartDate(int month, String day) {
-
         this.month = toMonth(month);
         this.day = toDay(day);
     }

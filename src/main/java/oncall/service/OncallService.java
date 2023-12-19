@@ -44,12 +44,13 @@ public class OncallService {
             DayOfWeek day = days.get(dayNumber);
 
             if (Holidays.isHoliday(monthNumber, dayNumber, day)) {
-                isWorkdayChanged = assignEmployee(oncallEmployees, holidayEmployees,
-                        holidayEmployeeIndex, isWorkdayChanged);
+                isHolidayChanged = assignEmployee(oncallEmployees, holidayEmployees,
+                        holidayEmployeeIndex, isHolidayChanged);
+                System.out.println();
             }
 
             if (!Holidays.isHoliday(monthNumber, dayNumber, day)) {
-                isHolidayChanged = assignEmployee(oncallEmployees, workdayEmployees,
+                isWorkdayChanged = assignEmployee(oncallEmployees, workdayEmployees,
                         workdayEmployeeIndex, isWorkdayChanged);
             }
         }
@@ -60,7 +61,7 @@ public class OncallService {
                                    int[] employeeIndex, boolean isChanged) {
         Employee candidate = employees.findEmployee(employeeIndex[0] % employees.getSize());
         if (isChanged) {
-            candidate = employees.findEmployee((employeeIndex[0] - 1) % employees.getSize());
+            candidate = employees.findEmployee((employeeIndex[0] - 1 ) % employees.getSize());
             isChanged = false;
         }
 
