@@ -108,7 +108,7 @@ class ApplicationTest2 extends NsTest {
     }
 
     @Test
-    void 기능_테스트_평일이자_휴일은_추가_표시() {
+    void 기능_테스트_주말이자_휴일은_추가_표시_안함() {
         assertSimpleTest(() -> {
             run(
                     "3,토",
@@ -147,6 +147,50 @@ class ApplicationTest2 extends NsTest {
                     "3월 29일 토 해시" + LINE_SEPARATOR,
                     "3월 30일 일 폴로" + LINE_SEPARATOR,
                     "3월 31일 월 노아이즈"
+            );
+        });
+    }
+
+    @Test
+    void 기능_테스트_평일이자_휴일은_추가_표시() {
+        assertSimpleTest(() -> {
+            run(
+                    "10,토",
+                    WORKDAY_NAMES,
+                    HOLIDAY_NAMES
+            );
+            assertThat(output()).contains(
+                    "10월 1일 토 오션" + LINE_SEPARATOR,
+                    "10월 2일 일 로이스" + LINE_SEPARATOR,
+                    "10월 3일 월(휴일) 애쉬" + LINE_SEPARATOR,
+                    "10월 4일 화 허브" + LINE_SEPARATOR,
+                    "10월 5일 수 쥬니" + LINE_SEPARATOR,
+                    "10월 6일 목 말랑" + LINE_SEPARATOR,
+                    "10월 7일 금 라온" + LINE_SEPARATOR,
+                    "10월 8일 토 푸만능" + LINE_SEPARATOR,
+                    "10월 9일 일 우가" + LINE_SEPARATOR,
+                    "10월 10일 월 헤나" + LINE_SEPARATOR,
+                    "10월 11일 화 우코" + LINE_SEPARATOR,
+                    "10월 12일 수 에단" + LINE_SEPARATOR,
+                    "10월 13일 목 수달" + LINE_SEPARATOR,
+                    "10월 14일 금 파워" + LINE_SEPARATOR,
+                    "10월 15일 토 아이크" + LINE_SEPARATOR,
+                    "10월 16일 일 첵스" + LINE_SEPARATOR,
+                    "10월 17일 월 히이로" + LINE_SEPARATOR,
+                    "10월 18일 화 마코" + LINE_SEPARATOR,
+                    "10월 19일 수 슬링키" + LINE_SEPARATOR,
+                    "10월 20일 목 모디" + LINE_SEPARATOR,
+                    "10월 21일 금 연어" + LINE_SEPARATOR,
+                    "10월 22일 토 로지" + LINE_SEPARATOR,
+                    "10월 23일 일 해시" + LINE_SEPARATOR,
+                    "10월 24일 월 깃짱" + LINE_SEPARATOR,
+                    "10월 25일 화 리오" + LINE_SEPARATOR,
+                    "10월 26일 수 고니" + LINE_SEPARATOR,
+                    "10월 27일 목 박스터" + LINE_SEPARATOR,
+                    "10월 28일 금 달리" + LINE_SEPARATOR,
+                    "10월 29일 토 폴로" + LINE_SEPARATOR,
+                    "10월 30일 일 스캇" + LINE_SEPARATOR,
+                    "10월 31일 월 조이"
             );
         });
     }
