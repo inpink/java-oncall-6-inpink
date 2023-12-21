@@ -28,15 +28,19 @@ public class Employees {
         return employees.get(index);
     }
 
-    public int getSize() {
-        return employees.size();
-    }
-
     private void validateSize(List<String> employeesNames) {
         IntegerValidator.validateInRange(
                 employeesNames.size(),
                 MIN_EMPLOYEES_COUNT.getValue(),
                 MAX_EMPLOYEES_COUNT.getValue()
         );
+    }
+
+    public int getSize() {
+        return employees.size();
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
     }
 }
