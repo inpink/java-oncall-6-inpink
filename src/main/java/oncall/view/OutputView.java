@@ -33,7 +33,6 @@ public class OutputView {
         StringBuilder output = new StringBuilder();
         int employeeIndex = 0;
         int lastEntryIndex = days.size();
-
         for (Map.Entry<Integer, DayOfWeek> entry : days.entrySet()) {
             int dayNumber = entry.getKey();
             DayOfWeek dayOfWeek = entry.getValue();

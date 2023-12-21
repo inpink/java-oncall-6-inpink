@@ -31,14 +31,11 @@ public class OncallController {
         final StartDate startDate = inputValidStartDate();
         final Dates dates = oncallService.generateDates(startDate);
 
-        final Pair<Employees, Employees> employeesPair = inputValidWorkdayAndHolidayEmployees();
+        final Pair<Employees, Employees> employeesPair = inputValidEmployees();
         final Employees workdayEmployees = employeesPair.getFirst();
         final Employees holidayEmployees = employeesPair.getSecond();
 
-        final Oncall oncall = oncallService.generateOncall(
-                startDate, dates,
-                workdayEmployees,
-                holidayEmployees);
+        final Oncall oncall = oncallService.generateOncall(dates, workdayEmployees, holidayEmployees);
 
         outputResult(startDate, dates, oncall);
     }
@@ -48,26 +45,15 @@ public class OncallController {
                 errorMessage -> outputView.outputErrorMessage(INVALID_INPUT.getMessage()));
     }
 
-    private Employees inputValidWorkdayEmployees() {
-        return InputUtil.retryOnInvalidInput(inputView::inputWorkdayEmployees,
+    private Pair<Employees, Employees> inputValidEmployees() {
+        return InputUtil.retryOnInvalidInput(() -> inputEmployees(),
                 errorMessage -> outputView.outputErrorMessage(INVALID_INPUT.getMessage()));
     }
 
-    private Employees inputValidHolidayEmployees() {
-        return InputUtil.retryOnInvalidInput(inputView::inputHolidayEmployees,
-                errorMessage -> outputView.outputErrorMessage(INVALID_INPUT.getMessage()));
-    }
-
-    private Pair<Employees, Employees> inputValidWorkdayAndHolidayEmployees() {
-        while (true) {
-            try {
-                final Employees workdayEmployees = inputView.inputWorkdayEmployees();
-                final Employees holidayEmployees = inputView.inputHolidayEmployees();
-                return new Pair<>(workdayEmployees, holidayEmployees);
-            } catch (IllegalArgumentException e) {
-                outputView.outputErrorMessage(INVALID_INPUT.getMessage());
-            }
-        }
+    private Pair<Employees, Employees> inputEmployees() {
+        final Employees workdayEmployees = inputView.inputWorkdayEmployees();
+        final Employees holidayEmployees = inputView.inputHolidayEmployees();
+        return new Pair<>(workdayEmployees, holidayEmployees);
     }
 
     private void outputResult(final StartDate startDate,

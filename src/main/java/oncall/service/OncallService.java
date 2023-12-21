@@ -2,10 +2,13 @@ package oncall.service;
 
 import static oncall.constants.IntegerConstants.DAY_A_WEEK_SIZE;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import oncall.domain.Employee;
 import oncall.domain.Employees;
 import oncall.domain.Orders;
@@ -28,61 +31,76 @@ public class OncallService {
         return Dates.create(month, days);
     }
 
-    public Oncall generateOncall(StartDate startDate, Dates dates,
-                                 Employees workdayEmployees, Employees holidayEmployees) {
-        Month monthNumber = startDate.getMonth();
-        Map<Integer, DayOfWeek> days = dates.getDays();
+    public Oncall generateOncall(Dates dates, Employees workdayEmployees, Employees holidayEmployees) {
         List<Employee> oncallEmployees = new ArrayList<>();
+        Deque<Employee> holidayEmployeesRotation = new ArrayDeque<>(holidayEmployees.getEmployees());
+        Deque<Employee> workdayEmployeesRotation = new ArrayDeque<>(workdayEmployees.getEmployees());
 
-        int[] workdayEmployeeIndex = new int[]{0};
-        int[] holidayEmployeeIndex = new int[]{0};
+        Optional<Employee> nextHolidayEmployee = Optional.empty();
+        Optional<Employee> nextWorkdayEmployee = Optional.empty();
 
-        boolean isWorkdayChanged = false;
-        boolean isHolidayChanged = false;
-
-        for (int dayNumber : days.keySet()) {
-            DayOfWeek day = days.get(dayNumber);
-
-            if (Holidays.isHoliday(monthNumber, dayNumber, day)) {
-                isHolidayChanged = assignEmployee(oncallEmployees, holidayEmployees,
-                        holidayEmployeeIndex, isHolidayChanged);
-                System.out.println();
+        for (int dayNumber : dates.getDayNumbers()) {
+            if (Holidays.isHoliday(dates.getMonth(), dayNumber, dates.getDay(dayNumber))) { //휴일
+                nextHolidayEmployee = addEmployee(nextHolidayEmployee, oncallEmployees, holidayEmployeesRotation);
+                continue;
             }
-
-            if (!Holidays.isHoliday(monthNumber, dayNumber, day)) {
-                isWorkdayChanged = assignEmployee(oncallEmployees, workdayEmployees,
-                        workdayEmployeeIndex, isWorkdayChanged);
-            }
+            nextWorkdayEmployee = addEmployee(nextWorkdayEmployee, oncallEmployees, workdayEmployeesRotation);
         }
         return Oncall.create(oncallEmployees);
     }
 
-    private boolean assignEmployee(List<Employee> oncallEmployees, Employees employees,
-                                   int[] employeeIndex, boolean isChanged) {
-        Employee candidate = employees.findEmployee(employeeIndex[0] % employees.getSize());
-        if (isChanged) {
-            candidate = employees.findEmployee((employeeIndex[0] - 1 ) % employees.getSize());
-            isChanged = false;
+    private static Optional<Employee> addEmployee(Optional<Employee> nextEmployee,
+                                                  List<Employee> oncallEmployees,
+                                                  Deque<Employee> employeesRotation) {
+        if (nextEmployee.isPresent()) {  // 만약 이전에 스위칭이 발생했으면
+            oncallEmployees.add(nextEmployee.get());
+            return Optional.empty();
         }
 
-        if (isLastOncallEmployee(oncallEmployees, candidate)) {
-            candidate = employees.findEmployee((employeeIndex[0] + 1) % employees.getSize());
-            isChanged = true;
-        }
-
-        oncallEmployees.add(candidate);
-        employeeIndex[0]++;
-        return isChanged;
+        //스위칭 발생 X
+        return addUnswitchedEmployee(nextEmployee, oncallEmployees, employeesRotation);
     }
 
-    private static boolean isLastOncallEmployee(List<Employee> oncallEmployees, Employee employeeCandidate) {
-        if (oncallEmployees.isEmpty()) {
+    private static Optional<Employee> addUnswitchedEmployee(
+            Optional<Employee> nextEmployee,
+            List<Employee> oncallEmployees,
+            Deque<Employee> employeesRotation) {
+        Employee employee = employeesRotation.pollFirst();
+        employeesRotation.addLast(employee);
+
+        //만약 연속이면
+        if (isContinuous(oncallEmployees, employee)) {
+            return addSwitchedEmployee(oncallEmployees, employeesRotation, employee);
+        }
+        oncallEmployees.add(employee); //연속 아니면 // 지금 껏 그대로 씀
+        return nextEmployee;
+    }
+
+    private static Optional<Employee> addSwitchedEmployee(List<Employee> oncallEmployees,
+                                                          Deque<Employee> employeesRotation,
+                                                          Employee employee) {
+        Optional<Employee> nextEmployee;
+        nextEmployee = Optional.ofNullable(employee); // 다음 사용은 이번 것
+        Employee switchedEmployee = employeesRotation.pollFirst();
+
+        // 넣는건 순서대로 넣어줌
+        employeesRotation.addLast(switchedEmployee);
+        oncallEmployees.add(switchedEmployee);
+        return nextEmployee;
+    }
+
+    private static boolean isContinuous(List<Employee> oncallEmployees, Employee candidate) {
+        if (oncallEmployees.size() == 0) {
             return false;
         }
 
-        String lastEmployeeNickName = oncallEmployees.get(oncallEmployees.size() - 1).getNickName();
-        return lastEmployeeNickName.equals(employeeCandidate.getNickName());
+        Employee beforeEmployee = oncallEmployees.get(oncallEmployees.size() - 1);
+        if (candidate.equals(beforeEmployee)) { // 중복됐으면
+            return true;
+        }
+        return false;
     }
+
 
     private static Map<Integer, DayOfWeek> generateDays(Month month, Orders orders) {
         Map<Integer, DayOfWeek> days = new LinkedHashMap<>();

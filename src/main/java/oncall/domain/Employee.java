@@ -3,6 +3,7 @@ package oncall.domain;
 import static oncall.constants.IntegerConstants.MAX_NICKNAME_LENGTH;
 import static oncall.constants.IntegerConstants.MIN_NICKNAME_LENGTH;
 
+import java.util.Objects;
 import oncall.validation.IntegerValidator;
 
 public class Employee {
@@ -27,4 +28,22 @@ public class Employee {
     public String getNickName() {
         return nickName;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Employee employee = (Employee) obj;
+        return Objects.equals(nickName, employee.nickName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nickName);
+    }
+
 }
